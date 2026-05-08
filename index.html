@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>JJ Lin · 将故事写成我们</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; }
+
+body {
+  background: #0a0a0f;
+  font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  color: #e2d4bc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Jade glow background ── */
+.jade-glow {
+  position: fixed; top: 50%; left: 50%;
+  width: 600px; height: 600px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(72,140,90,0.15) 0%, rgba(72,140,90,0.05) 40%, transparent 70%);
+  pointer-events: none;
+  animation: glowPulse 6s ease-in-out infinite;
+  z-index: 0;
+}
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+/* ── Floating particles ── */
+.particle {
+  position: fixed;
+  font-size: 16px;
+  opacity: 0;
+  pointer-events: none;
+  animation: floatUp linear infinite;
+  z-index: 1;
+}
+@keyframes floatUp {
+  0% { opacity: 0; transform: translateY(100vh) rotate(0deg); }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.6; }
+  100% { opacity: 0; transform: translateY(-10vh) rotate(360deg); }
+}
+
+/* ── Main card ── */
+.card {
+  position: relative;
+  z-index: 10;
+  width: 90vw;
+  max-width: 420px;
+  min-height: 80vh;
+  max-height: 90vh;
+  background: rgba(10, 10, 15, 0.92);
+  border: 1px solid rgba(72, 140, 90, 0.2);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 60px rgba(72, 140, 90, 0.08);
+}
+
+/* ── Jade pendant top ── */
+.pendant-area {
+  display: flex;
+  justify-content: center;
+  padding: 30px 0 10px;
+}
+.jade-pendant {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #7bc47f, #3a7d44, #1a4a2a);
+  box-shadow: 0 0 20px rgba(72, 140, 90, 0.4), inset 0 2px 4px rgba(255,255,255,0.15);
+  animation: pendantSwing 4s ease-in-out infinite;
+  position: relative;
+}
+.jade-pendant::after {
+  content: '';
+  position: absolute;
+  top: -20px; left: 50%;
+  transform: translateX(-50%);
+  width: 2px; height: 20px;
+  background: linear-gradient(to bottom, rgba(188,166,121,0.3), rgba(72,140,90,0.5));
+}
+@keyframes pendantSwing {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+/* ── Cover screen ── */
+.cover {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  cursor: pointer;
+  transition: opacity 0.8s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.cover.hidden { opacity: 0; pointer-events: none; position: absolute; }
+
+.cover-music-icon { font-size: 40px; margin-bottom: 20px; }
+.cover-title {
+  font-family: 'Kaiti TC', 'STKaiti', 'KaiTi', serif;
+  font-size: 22px;
+  color: rgba(188, 166, 121, 0.85);
+  letter-spacing: 4px;
+  margin-bottom: 8px;
+}
+.cover-sub {
+  font-size: 11px;
+  color: rgba(188, 166, 121, 0.35);
+  letter-spacing: 2px;
+  margin-bottom: 30px;
+}
+.cover-cta {
+  font-size: 14px;
+  color: rgba(188, 166, 121, 0.6);
+  letter-spacing: 3px;
+  animation: ctaPulse 2s ease-in-out infinite;
+}
+@keyframes ctaPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* ── Piano key divider ── */
+.piano-divider {
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+  padding: 8px 20px;
+  opacity: 0.4;
+}
+.piano-key {
+  height: 6px;
+  border-radius: 1px;
+}
+.piano-key.white { width: 14px; background: rgba(188, 166, 121, 0.3); }
+.piano-key.black { width: 8px; background: rgba(72, 140, 90, 0.4); margin-top: -3px; height: 9px; }
+
+/* ── Sound wave ── */
+.sound-wave {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 3px;
+  height: 24px;
+  padding: 4px 0;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+.sound-wave.active { opacity: 1; }
+.wave-bar {
+  width: 3px;
+  background: rgba(72, 140, 90, 0.5);
+  border-radius: 2px;
+  animation: waveAnim 1.2s ease-in-out infinite;
+}
+@keyframes waveAnim {
+  0%, 100% { height: 4px; }
+  50% { height: 20px; }
+}
+
+/* ── Message area ── */
+.message-area {
+  flex: 1;
+  padding: 20px 24px;
+  overflow-y: auto;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  -webkit-overflow-scrolling: touch;
+}
+.message-area.visible { opacity: 1; }
+
+.msg-line {
+  margin-bottom: 12px;
+  line-height: 1.8;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.msg-line.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Text styles */
+.msg-normal {
+  font-size: 15px;
+  color: #e2d4bc;
+}
+.msg-gold {
+  font-size: 16px;
+  color: #d4a843;
+  text-shadow: 0 0 12px rgba(212, 168, 67, 0.3);
+  font-weight: 500;
+}
+.msg-lyric {
+  font-family: 'Kaiti TC', 'STKaiti', 'KaiTi', serif;
+  font-size: 14px;
+  font-style: italic;
+  color: rgba(188, 166, 121, 0.6);
+  padding-left: 12px;
+  border-left: 2px solid rgba(72, 140, 90, 0.3);
+}
+.msg-sign {
+  font-size: 12px;
+  color: rgba(102, 144, 111, 0.5);
+  text-align: right;
+  margin-top: 20px;
+  letter-spacing: 2px;
+}
+
+/* ── Typing cursor ── */
+.cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: rgba(188, 166, 121, 0.6);
+  margin-left: 2px;
+  animation: blink 0.8s step-end infinite;
+  vertical-align: text-bottom;
+}
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* ── Footer ── */
+.footer {
+  text-align: center;
+  padding: 12px;
+  font-size: 10px;
+  color: rgba(188, 166, 121, 0.2);
+  letter-spacing: 1px;
+}
+</style>
+</head>
+<body>
+
+<audio id="bgm" src="music.webm" loop preload="auto"></audio>
+<div class="jade-glow"></div>
+
+<div class="card">
+  <div class="pendant-area">
+    <div class="jade-pendant"></div>
+  </div>
+
+  <div class="piano-divider" id="pianoTop"></div>
+
+  <!-- Cover -->
+  <div class="cover" id="cover" onclick="openCard()">
+    <div class="cover-music-icon">🎵</div>
+    <div class="cover-title">将故事写成我们</div>
+    <div class="cover-sub">JJ Lin · 林俊杰</div>
+    <div class="cover-cta">— 点 击 开 启 —</div>
+  </div>
+
+  <!-- Sound wave -->
+  <div class="sound-wave" id="soundWave"></div>
+
+  <!-- Messages -->
+  <div class="message-area" id="messageArea"></div>
+
+  <div class="piano-divider" id="pianoBottom"></div>
+  <div class="footer">JJ Lin · 将故事写成我们 · 生日快乐</div>
+</div>
+
+<script>
+// ══════════════════════════════════════
+// ✏️ EDIT YOUR MESSAGES HERE
+// style: 'normal' | 'gold' | 'lyric' | 'sign'
+// ══════════════════════════════════════
+const MESSAGES = [
+  { text: "今天是你的生日", style: "normal" },
+  { text: "♪ ♫ ♪", style: "gold" },
+  { text: "", style: "normal" },
+  { text: "希望从今天起", style: "normal" },
+  { text: "你不再孤独娱乐", style: "lyric" },
+  { text: "", style: "normal" },
+  { text: "那些你很冒险的梦", style: "normal" },
+  { text: "我陪你去疯", style: "lyric" },
+  { text: "", style: "normal" },
+  { text: "将故事写成我们", style: "gold" },
+  { text: "", style: "normal" },
+  { text: "生日快乐 🎉", style: "gold" },
+  { text: "愿所有美好都如期而至", style: "normal" },
+  { text: "", style: "normal" },
+  { text: "—— 爱你的臭Jerry ❤️", style: "sign" },
+];
+
+// ── Particles ──
+const NOTES = ['♪', '♫', '♬', '♩', '🎵', '🎶', '✨', '🫧'];
+function createParticles() {
+  const count = 12;
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('div');
+    el.className = 'particle';
+    el.textContent = NOTES[Math.floor(Math.random() * NOTES.length)];
+    el.style.left = Math.random() * 100 + 'vw';
+    el.style.fontSize = (12 + Math.random() * 14) + 'px';
+    el.style.animationDuration = (8 + Math.random() * 12) + 's';
+    el.style.animationDelay = (Math.random() * 15) + 's';
+    document.body.appendChild(el);
+  }
+}
+
+// ── Piano keys ──
+function createPiano(containerId) {
+  const c = document.getElementById(containerId);
+  const pattern = [1,1,0,1,1,1,0,1,1,0,1,1,1,0,1,1,0,1,1,1,0,1,1,0,1,1,1,0,1];
+  pattern.forEach(isWhite => {
+    const k = document.createElement('div');
+    k.className = 'piano-key ' + (isWhite ? 'white' : 'black');
+    c.appendChild(k);
+  });
+}
+
+// ── Sound wave bars ──
+function createWaveBars() {
+  const c = document.getElementById('soundWave');
+  for (let i = 0; i < 20; i++) {
+    const b = document.createElement('div');
+    b.className = 'wave-bar';
+    b.style.animationDelay = (i * 0.08) + 's';
+    c.appendChild(b);
+  }
+}
+
+// ── Open card ──
+let opened = false;
+function openCard() {
+  if (opened) return;
+  opened = true;
+
+  document.getElementById('cover').classList.add('hidden');
+  document.getElementById('soundWave').classList.add('active');
+  document.getElementById('bgm').play().catch(()=>{});
+
+  const area = document.getElementById('messageArea');
+  area.classList.add('visible');
+
+  let idx = 0;
+  function showNext() {
+    if (idx >= MESSAGES.length) return;
+    const msg = MESSAGES[idx];
+    idx++;
+
+    const div = document.createElement('div');
+    div.className = 'msg-line';
+
+    if (msg.style === 'sign') {
+      div.classList.add('msg-sign');
+      div.innerHTML = msg.text;
+      area.appendChild(div);
+      requestAnimationFrame(() => div.classList.add('show'));
+      area.scrollTop = area.scrollHeight;
+      return;
+    }
+
+    const cls = 'msg-' + msg.style;
+    div.classList.add(cls);
+    area.appendChild(div);
+
+    if (!msg.text.trim()) {
+      div.innerHTML = '&nbsp;';
+      requestAnimationFrame(() => div.classList.add('show'));
+      setTimeout(showNext, 200);
+      return;
+    }
+
+    // Typewriter effect
+    let charIdx = 0;
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    div.appendChild(cursor);
+    requestAnimationFrame(() => div.classList.add('show'));
+
+    function typeChar() {
+      if (charIdx < msg.text.length) {
+        const span = document.createTextNode(msg.text[charIdx]);
+        div.insertBefore(span, cursor);
+        charIdx++;
+        area.scrollTop = area.scrollHeight;
+        setTimeout(typeChar, 60 + Math.random() * 40);
+      } else {
+        cursor.remove();
+        setTimeout(showNext, 400);
+      }
+    }
+    setTimeout(typeChar, 300);
+  }
+  showNext();
+}
+
+// ── Init ──
+createParticles();
+createPiano('pianoTop');
+createPiano('pianoBottom');
+createWaveBars();
+</script>
+</body>
+</html>
