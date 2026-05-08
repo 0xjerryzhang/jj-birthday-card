@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>写成了我们 · 生日快乐</title>
+<title>将故事写成我们 · JJ Lin</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html, body { width: 100%; height: 100%; overflow: hidden; }
@@ -135,46 +135,265 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 12px 20px 20px;
   cursor: pointer;
   transition: opacity 0.8s ease;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
+  position: relative;
+  overflow: hidden;
 }
 .cover.hidden { opacity: 0; pointer-events: none; position: absolute; }
 
-.cover-mic { font-size: 44px; margin-bottom: 16px; animation: micFloat 3s ease-in-out infinite; }
-@keyframes micFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+/* ── Spinning vinyl record ── */
+.vinyl-wrap {
+  position: relative;
+  width: 90px; height: 90px;
+  margin-bottom: 14px;
 }
+.vinyl {
+  width: 90px; height: 90px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%,
+    #1a0a2e 18%,
+    #2d1b4e 19%, #1a0a2e 20%,
+    #2d1b4e 28%, #1a0a2e 29%,
+    #2d1b4e 37%, #1a0a2e 38%,
+    #2d1b4e 46%, #1a0a2e 47%
+  );
+  border: 2px solid rgba(138, 43, 226, 0.4);
+  animation: vinylSpin 4s linear infinite;
+  box-shadow: 0 0 20px rgba(138, 43, 226, 0.3), inset 0 0 15px rgba(0,0,0,0.5);
+}
+.vinyl-center {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #d4a0f0, #9b59b6);
+  box-shadow: 0 0 8px rgba(186, 85, 211, 0.6);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; color: #fff; font-weight: 700;
+  z-index: 2;
+}
+@keyframes vinylSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ── Q-version chibi character ── */
+.chibi {
+  position: absolute;
+  bottom: 18px;
+  width: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: chibiBounce 1.2s ease-in-out infinite;
+  z-index: 5;
+}
+.chibi-left { left: 12px; animation-delay: 0s; }
+.chibi-right { right: 12px; animation-delay: 0.6s; transform: scaleX(-1); }
+
+.chibi-head {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f5deb3, #ffe4c4);
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.chibi-hair {
+  position: absolute;
+  top: -4px; left: -2px;
+  width: 44px; height: 22px;
+  background: #2c1810;
+  border-radius: 22px 22px 4px 4px;
+}
+.chibi-hair-fringe {
+  position: absolute;
+  top: 8px; left: 4px;
+  width: 32px; height: 12px;
+  background: #2c1810;
+  border-radius: 0 0 16px 16px;
+}
+.chibi-eye {
+  position: absolute;
+  width: 5px; height: 6px;
+  background: #1a1a2e;
+  border-radius: 50%;
+  top: 18px;
+  animation: chibiBlink 3s step-end infinite;
+}
+.chibi-eye-left { left: 11px; }
+.chibi-eye-right { right: 11px; }
+@keyframes chibiBlink {
+  0%, 90% { transform: scaleY(1); }
+  95% { transform: scaleY(0.1); }
+}
+.chibi-mouth {
+  position: absolute;
+  bottom: 8px; left: 50%;
+  transform: translateX(-50%);
+  width: 8px; height: 4px;
+  border-bottom: 2px solid #d4956b;
+  border-radius: 0 0 8px 8px;
+}
+.chibi-blush {
+  position: absolute;
+  width: 8px; height: 5px;
+  background: rgba(255, 130, 130, 0.35);
+  border-radius: 50%;
+  top: 23px;
+}
+.chibi-blush-left { left: 4px; }
+.chibi-blush-right { right: 4px; }
+.chibi-body {
+  width: 28px; height: 24px;
+  background: linear-gradient(135deg, #9b59b6, #7d3c98);
+  border-radius: 6px 6px 10px 10px;
+  margin-top: -3px;
+  position: relative;
+}
+.chibi-body::after {
+  content: 'JJ';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 8px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 1px;
+}
+.chibi-arm {
+  position: absolute;
+  width: 8px; height: 16px;
+  background: #f5deb3;
+  border-radius: 4px;
+  top: 2px;
+}
+.chibi-arm-left {
+  left: -7px;
+  transform-origin: top center;
+  animation: armWaveL 0.8s ease-in-out infinite;
+}
+.chibi-arm-right {
+  right: -7px;
+  transform-origin: top center;
+  animation: armWaveR 0.8s ease-in-out infinite 0.4s;
+}
+@keyframes armWaveL {
+  0%, 100% { transform: rotate(15deg); }
+  50% { transform: rotate(-25deg); }
+}
+@keyframes armWaveR {
+  0%, 100% { transform: rotate(-15deg); }
+  50% { transform: rotate(25deg); }
+}
+.chibi-mic {
+  position: absolute;
+  right: -14px; top: -6px;
+  font-size: 14px;
+  animation: micBob 0.6s ease-in-out infinite;
+}
+@keyframes micBob {
+  0%, 100% { transform: rotate(-10deg) translateY(0); }
+  50% { transform: rotate(10deg) translateY(-3px); }
+}
+@keyframes chibiBounce {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  25% { transform: translateY(-6px) rotate(2deg); }
+  50% { transform: translateY(0) rotate(-2deg); }
+  75% { transform: translateY(-3px) rotate(1deg); }
+}
+.chibi-right { animation-name: chibiBounceR; }
+@keyframes chibiBounceR {
+  0%, 100% { transform: scaleX(-1) translateY(0) rotate(-2deg); }
+  25% { transform: scaleX(-1) translateY(-6px) rotate(2deg); }
+  50% { transform: scaleX(-1) translateY(0) rotate(-2deg); }
+  75% { transform: scaleX(-1) translateY(-3px) rotate(1deg); }
+}
+
+/* ── Cover floating notes ── */
+.cover-notes {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+.cover-note {
+  position: absolute;
+  font-size: 18px;
+  opacity: 0.25;
+  animation: noteFloat 6s ease-in-out infinite;
+}
+.cover-note:nth-child(1) { top: 12%; left: 8%; animation-delay: 0s; }
+.cover-note:nth-child(2) { top: 25%; right: 10%; animation-delay: 1.5s; font-size: 14px; }
+.cover-note:nth-child(3) { top: 60%; left: 5%; animation-delay: 3s; font-size: 12px; }
+.cover-note:nth-child(4) { top: 70%; right: 8%; animation-delay: 4.5s; }
+.cover-note:nth-child(5) { top: 40%; left: 12%; animation-delay: 2s; font-size: 16px; }
+.cover-note:nth-child(6) { top: 15%; right: 15%; animation-delay: 5s; font-size: 13px; }
+@keyframes noteFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.2; }
+  50% { transform: translateY(-10px) rotate(15deg); opacity: 0.4; }
+}
+
+/* ── Cover album badges ── */
+.album-strip {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 10px;
+  max-width: 280px;
+}
+.album-badge {
+  font-size: 9px;
+  color: rgba(186, 85, 211, 0.5);
+  background: rgba(138, 43, 226, 0.1);
+  border: 1px solid rgba(138, 43, 226, 0.2);
+  padding: 2px 8px;
+  border-radius: 10px;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+/* ── Cover title ── */
 .cover-title {
-  font-size: 26px;
-  font-weight: 600;
+  font-size: 28px;
+  font-weight: 700;
   color: #d4a0f0;
   letter-spacing: 6px;
-  margin-bottom: 6px;
-  text-shadow: 0 0 20px rgba(186, 85, 211, 0.4);
+  margin-bottom: 4px;
+  text-shadow: 0 0 24px rgba(186, 85, 211, 0.5), 0 0 48px rgba(138, 43, 226, 0.2);
+  position: relative;
+  z-index: 3;
 }
 .cover-sub {
   font-size: 13px;
   color: rgba(200, 180, 230, 0.5);
   letter-spacing: 2px;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
+  position: relative;
+  z-index: 3;
 }
-.cover-songs {
-  font-size: 10px;
-  color: rgba(186, 85, 211, 0.3);
+.cover-quote {
+  font-size: 11px;
+  font-style: italic;
+  color: rgba(200, 180, 230, 0.35);
   letter-spacing: 1px;
-  margin-bottom: 30px;
+  margin-bottom: 14px;
   text-align: center;
-  line-height: 1.8;
+  position: relative;
+  z-index: 3;
 }
 .cover-cta {
   font-size: 14px;
   color: rgba(200, 180, 230, 0.6);
   letter-spacing: 4px;
   animation: ctaPulse 2s ease-in-out infinite;
+  position: relative;
+  z-index: 3;
 }
 @keyframes ctaPulse {
   0%, 100% { opacity: 0.4; }
@@ -305,14 +524,76 @@ body {
 
   <!-- Cover -->
   <div class="cover" id="cover" onclick="openCard()">
-    <div class="cover-mic">🎤</div>
-    <div class="cover-title">写成了我们</div>
-    <div class="cover-sub">亲爱的小宝贝 · 生日快乐</div>
-    <div class="cover-songs">
-      两条平行线 · 经过 · 交错<br>
-      从一个人 · 写成了我们
+
+    <!-- Floating music notes -->
+    <div class="cover-notes">
+      <div class="cover-note">♪</div>
+      <div class="cover-note">♫</div>
+      <div class="cover-note">♬</div>
+      <div class="cover-note">🎵</div>
+      <div class="cover-note">♩</div>
+      <div class="cover-note">💜</div>
     </div>
+
+    <!-- Spinning vinyl -->
+    <div class="vinyl-wrap">
+      <div class="vinyl"></div>
+      <div class="vinyl-center">JJ</div>
+    </div>
+
+    <div class="cover-title">将故事写成我们</div>
+    <div class="cover-sub">JJ Lin · 林俊杰</div>
+
+    <!-- Album badges -->
+    <div class="album-strip">
+      <span class="album-badge">江南</span>
+      <span class="album-badge">曹操</span>
+      <span class="album-badge">修炼爱情</span>
+      <span class="album-badge">可惜没如果</span>
+      <span class="album-badge">那些你很冒险的梦</span>
+      <span class="album-badge">将故事写成我们</span>
+      <span class="album-badge">孤独娱乐</span>
+    </div>
+
+    <div class="cover-quote">「这故事开始一个人，我们认真写成了我们」</div>
     <div class="cover-cta">— 点 击 开 启 —</div>
+
+    <!-- Q-version chibi left -->
+    <div class="chibi chibi-left">
+      <div class="chibi-head">
+        <div class="chibi-hair"></div>
+        <div class="chibi-hair-fringe"></div>
+        <div class="chibi-eye chibi-eye-left"></div>
+        <div class="chibi-eye chibi-eye-right"></div>
+        <div class="chibi-blush chibi-blush-left"></div>
+        <div class="chibi-blush chibi-blush-right"></div>
+        <div class="chibi-mouth"></div>
+      </div>
+      <div class="chibi-body">
+        <div class="chibi-arm chibi-arm-left"></div>
+        <div class="chibi-arm chibi-arm-right"></div>
+        <div class="chibi-mic">🎤</div>
+      </div>
+    </div>
+
+    <!-- Q-version chibi right -->
+    <div class="chibi chibi-right">
+      <div class="chibi-head">
+        <div class="chibi-hair"></div>
+        <div class="chibi-hair-fringe"></div>
+        <div class="chibi-eye chibi-eye-left"></div>
+        <div class="chibi-eye chibi-eye-right"></div>
+        <div class="chibi-blush chibi-blush-left"></div>
+        <div class="chibi-blush chibi-blush-right"></div>
+        <div class="chibi-mouth"></div>
+      </div>
+      <div class="chibi-body">
+        <div class="chibi-arm chibi-arm-left"></div>
+        <div class="chibi-arm chibi-arm-right"></div>
+        <div class="chibi-mic">🎤</div>
+      </div>
+    </div>
+
   </div>
 
   <!-- Sound wave -->
